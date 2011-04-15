@@ -1,8 +1,8 @@
 Installation &c.
 
-1) Run ./phenny - this creates a default config file
-2) Edit ~/.phenny/default.py
-3) Run ./phenny - this now runs phenny with your settings
+1) Run ./torp - this creates a default config file
+2) Edit ~/.torp/default.py
+3) Run ./torp - this now runs torp with your settings
 
 Enjoy!
 

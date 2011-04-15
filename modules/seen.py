@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-seen.py - Phenny Seen Module
+seen.py - Torp Seen Module
 Copyright 2008, Sean B. Palmer, inamidst.com
 Licensed under the Eiffel Forum License 2.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-search.py - Phenny Web Search Module
+search.py - Torp Web Search Module
 Copyright 2008-9, Sean B. Palmer, inamidst.com
 Licensed under the Eiffel Forum License 2.
 
@@ -37,29 +37,29 @@ def formatnumber(n):
       parts.insert(i, ',')
    return ''.join(parts)
 
-def g(phenny, input): 
+def g(torp, input): 
    """Queries Google for the specified input."""
    query = input.group(2)
    if not query: 
-      return phenny.reply('.g what?')
+      return torp.reply('.g what?')
    uri = result(query)
    if uri: 
-      phenny.reply(uri)
-      if not hasattr(phenny.bot, 'last_seen_uri'):
-         phenny.bot.last_seen_uri = {}
-      phenny.bot.last_seen_uri[input.sender] = uri
-   else: phenny.reply("No results found for '%s'." % query)
+      torp.reply(uri)
+      if not hasattr(torp.bot, 'last_seen_uri'):
+         torp.bot.last_seen_uri = {}
+      torp.bot.last_seen_uri[input.sender] = uri
+   else: torp.reply("No results found for '%s'." % query)
 g.commands = ['g']
 g.priority = 'high'
 g.example = '.g swhack'
 
-def gc(phenny, input): 
+def gc(torp, input): 
    """Returns the number of Google results for the specified input."""
    query = input.group(2)
    if not query: 
-      return phenny.reply('.gc what?')
+      return torp.reply('.gc what?')
    num = formatnumber(count(query))
-   phenny.say(query + ': ' + num)
+   torp.say(query + ': ' + num)
 gc.commands = ['gc']
 gc.priority = 'high'
 gc.example = '.gc extrapolate'
@@ -68,10 +68,10 @@ r_query = re.compile(
    r'\+?"[^"\\]*(?:\\.[^"\\]*)*"|\[[^]\\]*(?:\\.[^]\\]*)*\]|\S+'
 )
 
-def gcs(phenny, input): 
+def gcs(torp, input): 
    queries = r_query.findall(input.group(2))
    if len(queries) > 6: 
-      return phenny.reply('Sorry, can only compare up to six things.')
+      return torp.reply('Sorry, can only compare up to six things.')
 
    results = []
    for i, query in enumerate(queries): 
@@ -83,12 +83,12 @@ def gcs(phenny, input):
 
    results = [(term, n) for (n, term) in reversed(sorted(results))]
    reply = ', '.join('%s (%s)' % (t, formatnumber(n)) for (t, n) in results)
-   phenny.say(reply)
+   torp.say(reply)
 gcs.commands = ['gcs', 'comp']
 
 r_bing = re.compile(r'<h3><a href="([^"]+)"')
 
-def bing(phenny, input): 
+def bing(torp, input): 
    """Queries Bing for the specified input."""
    query = input.group(2)
    if query.startswith(':'): 
@@ -96,7 +96,7 @@ def bing(phenny, input):
       lang = lang[1:]
    else: lang = 'en-GB'
    if not query:
-      return phenny.reply('.bing what?')
+      return torp.reply('.bing what?')
 
    query = web.urllib.quote(query.encode('utf-8'))
    base = 'http://www.bing.com/search?mkt=%s&q=' % lang
@@ -104,11 +104,11 @@ def bing(phenny, input):
    m = r_bing.search(bytes)
    if m: 
       uri = m.group(1)
-      phenny.reply(uri)
-      if not hasattr(phenny.bot, 'last_seen_uri'):
-         phenny.bot.last_seen_uri = {}
-      phenny.bot.last_seen_uri[input.sender] = uri
-   else: phenny.reply("No results found for '%s'." % query)
+      torp.reply(uri)
+      if not hasattr(torp.bot, 'last_seen_uri'):
+         torp.bot.last_seen_uri = {}
+      torp.bot.last_seen_uri[input.sender] = uri
+   else: torp.reply("No results found for '%s'." % query)
 bing.commands = ['bing']
 bing.example = '.bing swhack'
 

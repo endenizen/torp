@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-tools.py - Phenny Tools
+tools.py - Torp Tools
 Copyright 2008, Sean B. Palmer, inamidst.com
 Licensed under the Eiffel Forum License 2.
 
@@ -8,8 +8,8 @@ http://inamidst.com/phenny/
 """
 
 def deprecated(old): 
-   def new(phenny, input, old=old): 
-      self = phenny
+   def new(torp, input, old=old): 
+      self = torp
       origin = type('Origin', (object,), {
          'sender': input.sender, 
          'nick': input.nick

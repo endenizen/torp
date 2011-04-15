@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-remind.py - Phenny Reminder Module
+remind.py - Torp Reminder Module
 Copyright 2011, Sean B. Palmer, inamidst.com
 Licensed under the Eiffel Forum License 2.
 
@@ -11,7 +11,7 @@ import os, re, time, threading
 
 def filename(self): 
    name = self.nick + '-' + self.config.host + '.reminders.db'
-   return os.path.join(os.path.expanduser('~/.phenny'), name)
+   return os.path.join(os.path.expanduser('~/.torp'), name)
 
 def load_database(name): 
    data = {}
@@ -34,27 +34,27 @@ def dump_database(name, data):
          f.write('%s\t%s\t%s\t%s\n' % (unixtime, channel, nick, message))
    f.close()
 
-def setup(phenny): 
-   phenny.rfn = filename(phenny)
-   phenny.rdb = load_database(phenny.rfn)
+def setup(torp): 
+   torp.rfn = filename(torp)
+   torp.rdb = load_database(torp.rfn)
 
-   def monitor(phenny): 
+   def monitor(torp): 
       time.sleep(5)
       while True: 
          now = int(time.time())
-         unixtimes = [int(key) for key in phenny.rdb]
+         unixtimes = [int(key) for key in torp.rdb]
          oldtimes = [t for t in unixtimes if t <= now]
          if oldtimes: 
             for oldtime in oldtimes: 
-               for (channel, nick, message) in phenny.rdb[oldtime]: 
+               for (channel, nick, message) in torp.rdb[oldtime]: 
                   if message: 
-                     phenny.msg(channel, nick + ': ' + message)
-                  else: phenny.msg(channel, nick + '!')
-               del phenny.rdb[oldtime]
-            dump_database(phenny.rfn, phenny.rdb)
+                     torp.msg(channel, nick + ': ' + message)
+                  else: torp.msg(channel, nick + '!')
+               del torp.rdb[oldtime]
+            dump_database(torp.rfn, torp.rdb)
          time.sleep(2.5)
 
-   targs = (phenny,)
+   targs = (torp,)
    t = threading.Thread(target=monitor, args=targs)
    t.start()
 
@@ -101,10 +101,10 @@ periods = '|'.join(scaling.keys())
 p_command = r'\.in ([0-9]+(?:\.[0-9]+)?)\s?((?:%s)\b)?:?\s?(.*)' % periods
 r_command = re.compile(p_command)
 
-def remind(phenny, input): 
+def remind(torp, input): 
    m = r_command.match(input.bytes)
    if not m: 
-      return phenny.reply("Sorry, didn't understand the input.")
+      return torp.reply("Sorry, didn't understand the input.")
    length, scale, message = m.groups()
 
    length = float(length)
@@ -118,18 +118,18 @@ def remind(phenny, input):
    t = int(time.time()) + duration
    reminder = (input.sender, input.nick, message)
 
-   try: phenny.rdb[t].append(reminder)
-   except KeyError: phenny.rdb[t] = [reminder]
+   try: torp.rdb[t].append(reminder)
+   except KeyError: torp.rdb[t] = [reminder]
 
-   dump_database(phenny.rfn, phenny.rdb)
+   dump_database(torp.rfn, torp.rdb)
 
    if duration >= 60: 
       w = ''
       if duration >= 3600 * 12: 
          w += time.strftime(' on %d %b %Y', time.gmtime(t))
       w += time.strftime(' at %H:%MZ', time.gmtime(t))
-      phenny.reply('Okay, will remind%s' % w)
-   else: phenny.reply('Okay, will remind in %s secs' % duration)
+      torp.reply('Okay, will remind%s' % w)
+   else: torp.reply('Okay, will remind in %s secs' % duration)
 remind.commands = ['in']
 
 if __name__ == '__main__': 
